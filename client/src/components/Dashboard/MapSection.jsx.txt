@@ -1,0 +1,43 @@
+import React, { useState } from 'react';
+import { Card, CardContent, Typography, Box, FormControlLabel, Switch } from '@mui/material';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({ iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'), iconUrl: require('leaflet/dist/images/marker-icon.png'), shadowUrl: require('leaflet/dist/images/marker-shadow.png') });
+
+const MapSection = () => {
+  const [showCrimeHeatmap, setShowCrimeHeatmap] = useState(false);
+  const properties = [
+    { id: 1, position: [-33.9249, 18.4241], price: 'R1,250,000', bedrooms: 3, bathrooms: 2, yield: 8.5, address: '123 Main Rd, Cape Town', color: 'green' },
+    { id: 2, position: [-33.9349, 18.4141], price: 'R950,000', bedrooms: 2, bathrooms: 1, yield: 7.2, address: '456 Oak St, Cape Town', color: 'blue' },
+  ];
+
+  return (
+    <Card sx={{ height: '500px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+      <CardContent sx={{ p: 0, height: '100%' }}>
+        <Box sx={{ p: 2, borderBottom: '1px solid #e0e0e0' }}><Typography variant="h6" sx={{ fontWeight: 'bold' }}>Property Map</Typography></Box>
+        <Box sx={{ height: 'calc(100% - 100px)' }}>
+          <MapContainer center={[-33.9249, 18.4241]} zoom={13} style={{ height: '100%', width: '100%' }}>
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            {properties.map(p => (
+              <Marker key={p.id} position={p.position}>
+                <Popup>
+                  <Box sx={{ minWidth: 200 }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>{p.address}</Typography>
+                    <Typography variant="h6" sx={{ color: '#2E7D32', my: 1 }}>{p.price}</Typography>
+                    <Typography variant="body2">{p.bedrooms} bed • {p.bathrooms} bath</Typography>
+                    <Typography variant="body2" sx={{ color: '#4CAF50', fontWeight: 'bold' }}>Yield: {p.yield}%</Typography>
+                  </Box>
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
+        </Box>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default MapSection;

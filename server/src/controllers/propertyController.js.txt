@@ -1,0 +1,30 @@
+const Property = require('../models/Property');
+const openai = require('openai');
+const openaiClient = new openai.OpenAI({ key: process.env.OPENAI_API_KEY });
+
+exports.getProperties = async (req, res) => {
+  const { country, city, minPrice, maxPrice, minYield } = req.query;
+  const filters = {};
+  if (country) filters.country = country;
+  if (city) filters.city = city;
+  if (minPrice || maxPrice) filters.price = {};
+  if (minPrice) filters.price.$gte = Number(minPrice);
+  if (maxPrice) filters.price.$lte = Number(maxPrice);
+  if (minYield) filters.estimatedYield = { $gte: Number(minYield) };
+  const properties = await Property.find(filters).limit(50);
+  res.json({ success: true, data: properties });
+};
+
+exports.queryProperties = async (req, res) => {
+  const { query } = req.body;
+  if (!query) return res.status(400).json({ success: false, error: 'Query required' });
+  const prompt = `Extract filters from: "${query}". Return JSON only: {country,city,minPrice,maxPrice,minYield,bedrooms}.`;
+  try {
+    const completion = await openaiClient.chat.completions.create({ model: 'gpt-3.5-turbo', messages: [{ role: 'user', content: prompt }], temperature: 0 });
+    const filters = JSON.parse(completion.choices[0].message.content);
+    const properties = await Property.find(filters).limit(20);
+    res.json({ success: true, data: properties, filters });
+  } catch (err) {
+    res.status(500).json({ success: false, error: 'AI parse failed' });
+  }
+};

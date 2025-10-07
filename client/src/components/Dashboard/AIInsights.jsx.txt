@@ -1,0 +1,43 @@
+import React from 'react';
+import { Card, CardContent, Typography, Box, List, ListItem, ListItemIcon, ListItemText, Chip, Alert, Rating } from '@mui/material';
+import { TrendingUp as TrendingUpIcon, Lightbulb as LightbulbIcon, Home as HomeIcon, Info as InfoIcon } from '@mui/icons-material';
+
+const AIInsights = () => {
+  const topProperties = [
+    { id: 1, address: '123 Ocean View, Sea Point', price: 'R1,200,000', roi: 9.2, lifestyle: 9, reason: 'High rental demand, low vacancy rates' },
+    { id: 2, address: '456 City Center, CBD', price: 'R850,000', roi: 8.8, lifestyle: 8, reason: 'Prime location, excellent transport links' },
+    { id: 3, address: '789 Suburban Bliss, Rondebosch', price: 'R1,500,000', roi: 8.1, lifestyle: 9, reason: 'Family-friendly area, top schools nearby' },
+  ];
+
+  const marketForecast = { trend: 'positive', prediction: '+3.5% to +5.2%', confidence: 'High', timeframe: 'Next 12 months' };
+
+  return (
+    <Box>
+      <Card sx={{ mb: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}><CardContent>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, display: 'flex', alignItems: 'center' }}><TrendingUpIcon sx={{ mr: 1, color: '#2E7D32' }} />AI Top Picks</Typography>
+        <List dense>{topProperties.map((p) => (<ListItem key={p.id} divider>
+          <ListItemIcon><HomeIcon sx={{ color: '#2E7D32' }} /></ListItemIcon>
+          <ListItemText primary={<Box><Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>{p.address}</Typography><Typography variant="body2" color="primary" sx={{ fontWeight: 'bold' }}>{p.price}</Typography></Box>}
+            secondary={<Box sx={{ mt: 1 }}><Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}><Typography variant="caption" sx={{ mr: 2 }}>ROI: {p.roi}%</Typography><Rating value={p.lifestyle / 2} readOnly size="small" /><Typography variant="caption" sx={{ ml: 1 }}>{p.lifestyle}/10</Typography></Box><Typography variant="caption" color="textSecondary">{p.reason}</Typography></Box>} />
+        </ListItem>))}</List>
+      </CardContent></Card>
+
+      <Card sx={{ mb: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}><CardContent>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, display: 'flex', alignItems: 'center' }}><InfoIcon sx={{ mr: 1, color: '#2196F3' }} />Market Forecast</Typography>
+        <Alert severity="success" sx={{ mb: 2 }}><Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>Expected Growth: {marketForecast.prediction}</Typography><Typography variant="caption">Confidence: {marketForecast.confidence} • {marketForecast.timeframe}</Typography></Alert>
+        <Box sx={{ p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}><Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>Key Indicators:</Typography><Typography variant="caption">• Interest rates stabilizing<br/>• Inventory levels decreasing<br/>• Rental demand increasing</Typography></Box>
+      </CardContent></Card>
+
+      <Card sx={{ boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}><CardContent>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, display: 'flex', alignItems: 'center' }}><LightbulbIcon sx={{ mr: 1, color: '#FF9800' }} />Negotiation Tips</Typography>
+        <List dense>
+          <ListItem><ListItemIcon><LightbulbIcon sx={{ color: '#FF9800' }} /></ListItemIcon><ListItemText primary="Market conditions favour buyers – negotiate 5-10 % below asking" /></ListItem>
+          <ListItem><ListItemIcon><LightbulbIcon sx={{ color: '#FF9800' }} /></ListItemIcon><ListItemText primary="Property has been on market 45 days – seller may accept lower offer" /></ListItem>
+          <ListItem><ListItemIcon><LightbulbIcon sx={{ color: '#FF9800' }} /></ListItemIcon><ListItemText primary="Similar properties sold for 8 % less recently" /></ListItem>
+        </List>
+      </CardContent></Card>
+    </Box>
+  );
+};
+
+export default AIInsights;

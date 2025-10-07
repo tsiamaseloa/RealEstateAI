@@ -1,0 +1,64 @@
+import React, { useState } from 'react';
+import { Card, CardContent, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Chip, Avatar, IconButton, Button, Box } from '@mui/material';
+import { Favorite as FavoriteIcon, TrendingUp as TrendingUpIcon, TrendingDown as TrendingDownIcon } from '@mui/icons-material';
+
+const PropertyTable = () => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const properties = [
+    { id: 1, address: '123 Main Road, Sea Point', suburb: 'Sea Point', price: 'R1,250,000', bedrooms: 3, bathrooms: 2, floorSize: 120, yield: 8.5, valueVsAsking: -5.2, status: 'Good Deal' },
+    { id: 2, address: '456 Beach Road, Green Point', suburb: 'Green Point', price: 'R2,100,000', bedrooms: 2, bathrooms: 2, floorSize: 95, yield: 7.2, valueVsAsking: 2.1, status: 'Overpriced' },
+  ];
+
+  const getStatusColor = (status) => (status === 'Great Deal' ? 'success' : status === 'Good Deal' ? 'info' : 'error');
+
+  return (
+    <Card sx={{ boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+      <CardContent>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Property Listings</Typography>
+        <TableContainer>
+          <Table>
+            <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
+              <TableRow>
+                <TableCell>Property</TableCell><TableCell align="right">Price</TableCell><TableCell align="center">Bed/Bath</TableCell><TableCell align="right">Floor Size</TableCell><TableCell align="right">Yield</TableCell><TableCell align="center">Value vs Asking</TableCell><TableCell align="center">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {properties.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((p) => (
+                <TableRow key={p.id} hover>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Avatar variant="rounded" src="https://via.placeholder.com/150" sx={{ width: 60, height: 60, mr: 2 }} />
+                      <Box>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>{p.address}</Typography>
+                        <Typography variant="body2" color="textSecondary">{p.suburb}</Typography>
+                      </Box>
+                    </Box>
+                  </TableCell>
+                  <TableCell align="right"><Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#2E7D32' }}>{p.price}</Typography></TableCell>
+                  <TableCell align="center"><Typography variant="body2">{p.bedrooms} bed • {p.bathrooms} bath</Typography></TableCell>
+                  <TableCell align="right"><Typography variant="body2">{p.floorSize} m²</Typography></TableCell>
+                  <TableCell align="right"><Chip label={`${p.yield}%`} color="success" size="small" sx={{ fontWeight: 'bold' }} /></TableCell>
+                  <TableCell align="center">
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {p.valueVsAsking < 0 ? <TrendingDownIcon sx={{ color: '#4CAF50', mr: 0.5 }} /> : <TrendingUpIcon sx={{ color: '#F44336', mr: 0.5 }} />}
+                      <Typography variant="body2" sx={{ color: p.valueVsAsking < 0 ? '#4CAF50' : '#F44336', fontWeight: 'bold' }}>{p.valueVsAsking > 0 ? '+' : ''}{p.valueVsAsking}%</Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell align="center">
+                    <IconButton size="small"><FavoriteIcon fontSize="small" /></IconButton>
+                    <Button variant="outlined" size="small" sx={{ ml: 1 }}>Details</Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination rowsPerPageOptions={[5, 10, 25]} component="div" count={properties.length} rowsPerPage={rowsPerPage} page={page} onPageChange={(e, newPage) => setPage(newPage)} onRowsPerPageChange={(e) => { setRowsPerPage(parseInt(e.target.value, 10)); setPage(0); }} />
+      </CardContent>
+    </Card>
+  );
+};
+
+export default PropertyTable;

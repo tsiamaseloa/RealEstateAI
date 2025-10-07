@@ -1,0 +1,38 @@
+import React from 'react';
+import { AppBar, Toolbar, Typography, Box, Select, MenuItem, TextField, InputAdornment, IconButton, Avatar } from '@mui/material';
+import { Menu as MenuIcon, Search as SearchIcon, Language as LanguageIcon } from '@mui/icons-material';
+
+const countries = [
+  { code: 'SA', name: 'South Africa', flag: '🇿🇦' },
+  { code: 'UK', name: 'United Kingdom', flag: '🇬🇧' },
+  { code: 'USA', name: 'United States', flag: '🇺🇸' },
+];
+
+const Navbar = ({ onMenuClick }) => {
+  const [selectedCountry, setSelectedCountry] = React.useState('SA');
+
+  return (
+    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: '#fff', color: '#333', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+      <Toolbar>
+        <IconButton color="inherit" aria-label="open drawer" edge="start" onClick={onMenuClick} sx={{ mr: 2, display: { md: 'none' } }}>
+          <MenuIcon />
+        </IconButton>
+        <Box sx={{ display: 'flex', alignItems: 'center', mr: 4 }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#2E7D32' }}>RealEstateAI</Typography>
+        </Box>
+        <Select value={selectedCountry} onChange={(e) => setSelectedCountry(e.target.value)} size="small" sx={{ minWidth: 120, mr: 3 }} startAdornment={<LanguageIcon sx={{ mr: 1, color: '#666' }} />}>
+          {countries.map((c) => (
+            <MenuItem key={c.code} value={c.code}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}><span style={{ marginRight: 8 }}>{c.flag}</span><span>{c.name}</span></Box>
+            </MenuItem>
+          ))}
+        </Select>
+        <TextField placeholder="Search city, suburb, postcode, or property URL..." variant="outlined" size="small" fullWidth sx={{ maxWidth: 500 }} InputProps={{ startAdornment: (<InputAdornment position="start"><SearchIcon color="action" /></InputAdornment>) }} />
+        <Box sx={{ flexGrow: 1 }} />
+        <IconButton color="inherit"><Avatar sx={{ width: 32, height: 32 }}>U</Avatar></IconButton>
+      </Toolbar>
+    </AppBar>
+  );
+};
+
+export default Navbar;

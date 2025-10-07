@@ -1,0 +1,35 @@
+import React, { useState } from 'react';
+import { Drawer, Box, Typography, Slider, FormControl, InputLabel, Select, MenuItem, Chip, Button, Divider } from '@mui/material';
+import { FilterList as FilterIcon } from '@mui/icons-material';
+
+const Sidebar = ({ mobileOpen, onClose }) => {
+  const [filters, setFilters] = useState({ country: '', city: '', propertyType: [], priceRange: [0, 2000000], yieldRange: [0, 20], crimeLevel: 'any', lifestyleTags: [] });
+
+  const propertyTypes = ['House', 'Apartment', 'Commercial', 'Land'];
+  const lifestyleOptions = ['Near Schools', 'Coastal', 'Urban', 'Rural'];
+
+  const drawerContent = (
+    <Box sx={{ p: 3, width: 280 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}><FilterIcon sx={{ mr: 2, color: '#2E7D32' }} /><Typography variant="h6" sx={{ fontWeight: 'bold' }}>Filters</Typography></Box>
+      {/* Country */}
+      <FormControl fullWidth size="small" sx={{ mb: 2 }}><InputLabel>Country</InputLabel><Select value={filters.country} onChange={(e) => setFilters({ ...filters, country: e.target.value })}><MenuItem value="">All</MenuItem><MenuItem value="SA">South Africa</MenuItem><MenuItem value="UK">United Kingdom</MenuItem><MenuItem value="USA">United States</MenuItem></Select></FormControl>
+      {/* City */}
+      <FormControl fullWidth size="small" sx={{ mb: 2 }}><InputLabel>City</InputLabel><Select value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })}><MenuItem value="">All</MenuItem><MenuItem value="Cape Town">Cape Town</MenuItem><MenuItem value="London">London</MenuItem><MenuItem value="New York">New York</MenuItem></Select></FormControl>
+      {/* Price */}
+      <Typography variant="subtitle2" sx={{ mb: 1 }}>Price Range</Typography><Slider value={filters.priceRange} onChange={(e, v) => setFilters({ ...filters, priceRange: v })} valueLabelDisplay="auto" min={0} max={2000000} step={50000} sx={{ color: '#2E7D32' }} />
+      {/* Yield */}
+      <Typography variant="subtitle2" sx={{ mb: 1, mt: 2 }}>Rental Yield (%)</Typography><Slider value={filters.yieldRange} onChange={(e, v) => setFilters({ ...filters, yieldRange: v })} valueLabelDisplay="auto" min={0} max={20} step={0.5} sx={{ color: '#2E7D32' }} />
+      {/* Buttons */}
+      <Button fullWidth variant="contained" sx={{ mt: 3, backgroundColor: '#2E7D32' }}>Apply Filters</Button>
+    </Box>
+  );
+
+  return (
+    <>
+      <Drawer variant="temporary" open={mobileOpen} onClose={onClose} sx={{ display: { xs: 'block', md: 'none' }, '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280 } }}>{drawerContent}</Drawer>
+      <Drawer variant="permanent" sx={{ display: { xs: 'none', md: 'block' }, '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280 } }} open>{drawerContent}</Drawer>
+    </>
+  );
+};
+
+export default Sidebar;

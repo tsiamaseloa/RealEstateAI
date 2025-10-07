@@ -1,0 +1,37 @@
+import React from 'react';
+import { Grid, Card, CardContent, Typography, Box } from '@mui/material';
+import { Home, AttachMoney, TrendingUp, Speed, Security, EmojiObjects } from '@mui/icons-material';
+
+const KPICard = ({ title, value, change, icon, color = '#2E7D32' }) => (
+  <Card sx={{ height: '100%', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+    <CardContent>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Box sx={{ backgroundColor: `${color}20`, borderRadius: '50%', p: 1, mr: 2 }}>{icon}</Box>
+        <Typography color="textSecondary" gutterBottom variant="body2">{title}</Typography>
+      </Box>
+      <Typography variant="h5" component="h2" sx={{ fontWeight: 'bold' }}>{value}</Typography>
+      {change && <Typography variant="body2" sx={{ color: change.startsWith('+') ? '#4CAF50' : '#F44336', mt: 1 }}>{change}</Typography>}
+    </CardContent>
+  </Card>
+);
+
+const KPISection = () => {
+  const kpiData = [
+    { title: 'Average Property Value', value: 'R1,245,000', change: '+5.2%', icon: <Home sx={{ color: '#2E7D32' }} />, color: '#2E7D32' },
+    { title: 'Median Rental Price', value: 'R8,500/mo', change: '+3.1%', icon: <AttachMoney sx={{ color: '#2196F3' }} />, color: '#2196F3' },
+    { title: 'Gross Rental Yield', value: '8.2%', change: '+0.5%', icon: <TrendingUp sx={{ color: '#4CAF50' }} />, color: '#4CAF50' },
+    { title: 'Capital Growth YoY', value: '12.5%', change: '+2.3%', icon: <Speed sx={{ color: '#FF9800' }} />, color: '#FF9800' },
+    { title: 'Crime Index', value: 'Medium', change: '-0.8%', icon: <Security sx={{ color: '#F44336' }} />, color: '#F44336' },
+    { title: 'Lifestyle Score', value: '8.5/10', change: '+0.3', icon: <EmojiObjects sx={{ color: '#9C27B0' }} />, color: '#9C27B0' },
+  ];
+
+  return (
+    <Grid container spacing={3}>
+      {kpiData.map((kpi, index) => (
+        <Grid item xs={12} sm={6} md={4} lg={2} key={index}><KPICard {...kpi} /></Grid>
+      ))}
+    </Grid>
+  );
+};
+
+export default KPISection;

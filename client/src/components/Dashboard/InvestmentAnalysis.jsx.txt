@@ -1,0 +1,57 @@
+import React, { useState } from 'react';
+import { Card, CardContent, Typography, Grid, TextField, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
+const InvestmentAnalysis = () => {
+  const [purchasePrice, setPurchasePrice] = useState(1250000);
+  const [monthlyRent, setMonthlyRent] = useState(8500);
+  const [expenses, setExpenses] = useState({ rates: 1200, levies: 800, insurance: 300, maintenance: 500, management: 850 });
+
+  const annualRent = monthlyRent * 12;
+  const annualExpenses = Object.values(expenses).reduce((a, b) => a + b, 0) * 12;
+  const netIncome = annualRent - annualExpenses;
+  const roi = ((netIncome / purchasePrice) * 100).toFixed(2);
+
+  const cashflowData = {
+    labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+    datasets: [{ label: 'Cumulative Cashflow', data: [netIncome, netIncome * 1.05, netIncome * 1.1, netIncome * 1.15, netIncome * 1.2], borderColor: '#2E7D32', backgroundColor: 'rgba(46, 125, 50, 0.1)', tension: 0.4 }]
+  };
+
+  const comparableSales = [
+    { address: '123 Similar St', price: 'R1,200,000', date: '2024-01-15', diff: '-4%' },
+    { address: '456 Nearby Ave', price: 'R1,300,000', date: '2024-02-20', diff: '+4%' },
+    { address: '789 Close Rd', price: 'R1,180,000', date: '2024-03-10', diff: '-5.6%' },
+  ];
+
+  return (
+    <Card sx={{ boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+      <CardContent>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>Investment Analysis</Typography>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={4}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2 }}>ROI Calculator</Typography>
+            <TextField fullWidth label="Purchase Price" type="number" value={purchasePrice} onChange={(e) => setPurchasePrice(Number(e.target.value))} InputProps={{ startAdornment: 'R' }} sx={{ mb: 2 }} />
+            <TextField fullWidth label="Monthly Rent" type="number" value={monthlyRent} onChange={(e) => setMonthlyRent(Number(e.target.value))} InputProps={{ startAdornment: 'R' }} sx={{ mb: 2 }} />
+            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>Monthly Expenses</Typography>
+            {Object.entries(expenses).map(([k, v]) => (
+              <TextField key={k} fullWidth label={k.charAt(0).toUpperCase() + k.slice(1)} type="number" value={v} onChange={(e) => setExpenses({ ...expenses, [k]: Number(e.target.value) })} size="small" sx={{ mb: 1 }} />
+            ))}
+            <Box sx={{ p: 2, backgroundColor: '#f5f5f5', borderRadius: 1, textAlign: 'center', mt: 2 }}><Typography variant="h6" sx={{ color: '#2E7D32', fontWeight: 'bold' }}>Net ROI: {roi}%</Typography><Typography variant="body2" color="textSecondary">Annual Net Income: R{netIncome.toLocaleString()}</Typography></Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2 }}>5-Year Cashflow Projection</Typography>
+            <Box sx={{ height: 300 }}><Line data={cashflowData} options={{ responsive: true, maintainAspectRatio: false }} /></Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2 }}>Recent Comparable Sales</Typography>
+            <TableContainer component={Paper} variant="outlined"><Table size="small"><TableHead sx={{ backgroundColor: '#f5f5f5' }}><TableRow><TableCell>Address</TableCell><TableCell align="right">Price</TableCell><TableCell align="right">Date</TableCell><TableCell align="right">Diff</TableCell></TableRow></TableHead><TableBody>{comparableSales.map((s, i) => (<TableRow key={i}><TableCell>{s.address}</TableCell><TableCell align="right">{s.price}</TableCell><TableCell align="right">{s.date}</TableCell><TableCell align="right"><Typography sx={{ color: s.diff.startsWith('+') ? '#F44336' : '#4CAF50', fontWeight: 'bold' }}>{s.diff}</Typography></TableCell></TableRow>))}</TableBody></Table></TableContainer>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default InvestmentAnalysis;
